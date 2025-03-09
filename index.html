@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Alpin Developer - JavaScript Encryptor</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+        body {
+            background-color: #121212;
+            color: #ffffff;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+        .container {
+            width: 90%;
+            max-width: 800px;
+            background: #1e1e1e;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 15px rgba(255, 255, 255, 0.2);
+            text-align: center;
+        }
+        h2 {
+            margin-bottom: 15px;
+        }
+        textarea, select, button, input {
+            width: 100%;
+            padding: 10px;
+            margin: 5px 0;
+            border-radius: 5px;
+            font-size: 16px;
+            border: none;
+            outline: none;
+        }
+        textarea {
+            height: 150px;
+            background: #252525;
+            color: #fff;
+            resize: vertical;
+        }
+        select, button {
+            background: #4CAF50;
+            color: white;
+            cursor: pointer;
+        }
+        button:hover {
+            background: #45a049;
+        }
+        .output-box {
+            background: #202020;
+            padding: 15px;
+            border-radius: 5px;
+            word-wrap: break-word;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h2>Alpin Developer - JavaScript Encryptor</h2>
+        <input type="file" id="fileInput">
+        <textarea id="jsInput" placeholder="Tempel kode JavaScript di sini..."></textarea>
+
+        <select id="mode">
+            <option value="normal">Normal</option>
+            <option value="medium">Medium</option>
+            <option value="hard">Hard</option>
+        </select>
+
+        <button onclick="encryptCode();">Encrypt</button>
+
+        <h3>Hasil Enkripsi:</h3>
+        <textarea id="jsOutput" class="output-box" readonly></textarea>
+
+        <button onclick="copyToClipboard();">Salin Kode</button>
+    </div>
+
+    <script>
+        document.getElementById("fileInput").addEventListener("change", function(event) {
+            var file = event.target.files[0];
+            if (file) {
+                var reader = new FileReader();
+                reader.onload = function(e) {
+                    document.getElementById("jsInput").value = e.target.result;
+                };
+                reader.readAsText(file);
+            }
+        });
+
+        function encryptCode() {
+            var code = document.getElementById("jsInput").value;
+            if (!code.trim()) {
+                alert("Masukkan kode JavaScript terlebih dahulu!");
+                return;
+            }
+
+            var mode = document.getElementById("mode").value;
+            var encryptedCode = encrypt(code, mode);
+            document.getElementById("jsOutput").value = encryptedCode;
+        }
+
+        function encrypt(code, mode) {
+            var encoded;
+            if (mode === "normal") {
+                encoded = generatePadding(570) + btoa(code);
+            } else if (mode === "medium") {
+                encoded = generatePadding(1200) + btoa(code).split("").reverse().join("");
+            } else {
+                encoded = generatePadding(1800) + btoa(code).split("").reverse().join("").replace(/[A-Za-z0-9]/g, function(c) {
+                    return String.fromCharCode(c.charCodeAt(0) + 3);
+                });
+            }
+
+            var finalCode;
+            if (mode === "normal") {
+                finalCode = `var decrypt=function(str){return atob(str.split("###")[1])};eval(decrypt('${encoded}'));`;
+            } else if (mode === "medium") {
+                finalCode = `var decrypt=function(str){return atob(str.split("###")[1].split("").reverse().join(""))};eval(decrypt('${encoded}'));`;
+            } else {
+                finalCode = `var decrypt=function(str){return atob(str.split("###")[1].replace(/[A-Za-z0-9]/g,function(c){return String.fromCharCode(c.charCodeAt(0)-3)}).split("").reverse().join(""))};eval(decrypt('${encoded}'));`;
+            }
+
+            return renameVariables(finalCode);
+        }
+
+        function generatePadding(lines) {
+            let padding = "###";
+            for (let i = 0; i < lines; i++) {
+                padding += "/* Encrypted Line */\n";
+            }
+            return padding;
+        }
+
+        function renameVariables(code) {
+            var varNames = code.match(/\b[a-zA-Z_]\w*\b/g);
+            var uniqueNames = [...new Set(varNames)];
+            uniqueNames.forEach(function(name, index) {
+                if (!["eval", "atob", "btoa", "decrypt"].includes(name)) {
+                    var newName = `var_${index}`;
+                    var regex = new RegExp(`\\b${name}\\b`, "g");
+                    code = code.replace(regex, newName);
+                }
+            });
+            return code;
+        }
+
+        function copyToClipboard() {
+            var output = document.getElementById("jsOutput");
+            output.select();
+            document.execCommand("copy");
+            alert("Kode telah disalin!");
+        }
+    </script>
+
+</body>
+</html>
