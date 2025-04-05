@@ -1,164 +1,167 @@
 <!DOCTYPE html>
-<html lang="id">
+<html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Alpin Developer - JavaScript Encryptor</title>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: Arial, sans-serif;
-        }
-        body {
-            background-color: #121212;
-            color: #ffffff;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-        }
-        .container {
-            width: 90%;
-            max-width: 800px;
-            background: #1e1e1e;
-            padding: 20px;
-            border-radius: 10px;
-            box-shadow: 0 0 15px rgba(255, 255, 255, 0.2);
-            text-align: center;
-        }
-        h2 {
-            margin-bottom: 15px;
-        }
-        textarea, select, button, input {
-            width: 100%;
-            padding: 10px;
-            margin: 5px 0;
-            border-radius: 5px;
-            font-size: 16px;
-            border: none;
-            outline: none;
-        }
-        textarea {
-            height: 150px;
-            background: #252525;
-            color: #fff;
-            resize: vertical;
-        }
-        select, button {
-            background: #4CAF50;
-            color: white;
-            cursor: pointer;
-        }
-        button:hover {
-            background: #45a049;
-        }
-        .output-box {
-            background: #202020;
-            padding: 15px;
-            border-radius: 5px;
-            word-wrap: break-word;
-        }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>JS Obfuscator DEWA++</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: 'Poppins', sans-serif;
+      background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
+      color: #fff;
+      min-height: 100vh;
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      animation: fadeIn 1s ease-out;
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(20px);}
+      to { opacity: 1; transform: translateY(0);}
+    }
+    h1 {
+      text-align: center;
+      font-size: 2.8rem;
+      margin-bottom: 25px;
+      text-shadow: 0 0 10px #00f0ff;
+      overflow: hidden;
+      white-space: nowrap;
+      border-right: .15em solid #00f0ff;
+      animation: typing 3s steps(30, end), blink-caret 0.75s step-end infinite;
+    }
+    @keyframes typing {
+      from { width: 0 }
+      to { width: 100% }
+    }
+    @keyframes blink-caret {
+      from, to { border-color: transparent }
+      50% { border-color: #00f0ff; }
+    }
+    .container {
+      flex: 1;
+      max-width: 850px;
+      margin: auto;
+      background: rgba(255,255,255,0.05);
+      padding: 30px;
+      border-radius: 15px;
+      box-shadow: 0 8px 25px rgba(0,0,0,0.5);
+      backdrop-filter: blur(10px);
+    }
+    textarea {
+      width: 100%;
+      height: 200px;
+      padding: 15px;
+      margin-bottom: 20px;
+      border: none;
+      border-radius: 10px;
+      background: rgba(0,0,0,0.3);
+      color: #fff;
+      font-size: 1rem;
+      resize: vertical;
+    }
+    .buttons, .modes {
+      display: flex;
+      justify-content: center;
+      gap: 20px;
+      flex-wrap: wrap;
+      margin-bottom: 20px;
+    }
+    button, select {
+      background: #00f0ff;
+      color: #000;
+      font-weight: bold;
+      padding: 10px 20px;
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+      transition: background 0.3s, transform 0.2s;
+    }
+    button:hover, select:hover {
+      background: #00c4cc;
+      transform: scale(1.05);
+    }
+    #output {
+      width: 100%;
+      height: 200px;
+      padding: 15px;
+      margin-top: 20px;
+      border: none;
+      border-radius: 10px;
+      background: rgba(0,0,0,0.5);
+      color: #00f0ff;
+      font-size: 1rem;
+      resize: vertical;
+    }
+    footer {
+      margin-top: 30px;
+      text-align: center;
+      font-size: 0.9rem;
+      opacity: 0.7;
+    }
+  </style>
 </head>
 <body>
-
-    <div class="container">
-        <h2>Alpin Developer - JavaScript Encryptor</h2>
-        <input type="file" id="fileInput">
-        <textarea id="jsInput" placeholder="Tempel kode JavaScript di sini..."></textarea>
-
-        <select id="mode">
-            <option value="normal">Normal</option>
-            <option value="medium">Medium</option>
-            <option value="hard">Hard</option>
-        </select>
-
-        <button onclick="encryptCode();">Encrypt</button>
-
-        <h3>Hasil Enkripsi:</h3>
-        <textarea id="jsOutput" class="output-box" readonly></textarea>
-
-        <button onclick="copyToClipboard();">Salin Kode</button>
+  <h1>JS Obf - Alpin Developer</h1>
+  <div class="container">
+    <textarea id="input" placeholder="Paste your JavaScript code here..."></textarea>
+    <div class="modes">
+      <select id="mode">
+        <option value="basic">Basic Obfuscation</option>
+        <option value="advanced">Advanced Obfuscation</option>
+        <option value="extreme">Extreme Scramble</option>
+      </select>
     </div>
+    <div class="buttons">
+      <button onclick="obfuscate()">Obfuscate</button>
+      <button onclick="copyResult()">Copy Result</button>
+      <button onclick="clearAll()">Clear</button>
+    </div>
+    <textarea id="output" readonly placeholder="Your obfuscated code will appear here..."></textarea>
+  </div>
+  <footer>
+    Made with passion by Developer | Upgrade EXTREME++
+  </footer>
 
-    <script>
-        document.getElementById("fileInput").addEventListener("change", function(event) {
-            var file = event.target.files[0];
-            if (file) {
-                var reader = new FileReader();
-                reader.onload = function(e) {
-                    document.getElementById("jsInput").value = e.target.result;
-                };
-                reader.readAsText(file);
-            }
-        });
+  <script>
+    function obfuscate() {
+      const input = document.getElementById('input').value;
+      const mode = document.getElementById('mode').value;
+      let output = '';
 
-        function encryptCode() {
-            var code = document.getElementById("jsInput").value;
-            if (!code.trim()) {
-                alert("Masukkan kode JavaScript terlebih dahulu!");
-                return;
-            }
+      if (!input.trim()) {
+        alert('Please paste your JavaScript code first!');
+        return;
+      }
 
-            var mode = document.getElementById("mode").value;
-            var encryptedCode = encrypt(code, mode);
-            document.getElementById("jsOutput").value = encryptedCode;
-        }
+      if (mode === 'basic') {
+        output = btoa(unescape(encodeURIComponent(input)));
+        output = `eval(decodeURIComponent(escape(atob('${output}'))));`;
+      } else if (mode === 'advanced') {
+        output = input.split('').map(c => {
+          return '\\x' + c.charCodeAt(0).toString(16);
+        }).join('');
+        output = `eval('${output}');`;
+      } else if (mode === 'extreme') {
+        output = input.split('').reverse().join('');
+        output = btoa(output);
+        output = `eval((function(str){return atob(str).split('').reverse().join('');})('${output}'));`;
+      }
+      
+      document.getElementById('output').value = output;
+    }
 
-        function encrypt(code, mode) {
-            var encoded;
-            if (mode === "normal") {
-                encoded = generatePadding(570) + btoa(code);
-            } else if (mode === "medium") {
-                encoded = generatePadding(1200) + btoa(code).split("").reverse().join("");
-            } else {
-                encoded = generatePadding(1800) + btoa(code).split("").reverse().join("").replace(/[A-Za-z0-9]/g, function(c) {
-                    return String.fromCharCode(c.charCodeAt(0) + 3);
-                });
-            }
+    function copyResult() {
+      const output = document.getElementById('output');
+      output.select();
+      document.execCommand('copy');
+      alert('Obfuscated code copied to clipboard!');
+    }
 
-            var finalCode;
-            if (mode === "normal") {
-                finalCode = `var decrypt=function(str){return atob(str.split("###")[1])};eval(decrypt('${encoded}'));`;
-            } else if (mode === "medium") {
-                finalCode = `var decrypt=function(str){return atob(str.split("###")[1].split("").reverse().join(""))};eval(decrypt('${encoded}'));`;
-            } else {
-                finalCode = `var decrypt=function(str){return atob(str.split("###")[1].replace(/[A-Za-z0-9]/g,function(c){return String.fromCharCode(c.charCodeAt(0)-3)}).split("").reverse().join(""))};eval(decrypt('${encoded}'));`;
-            }
-
-            return renameVariables(finalCode);
-        }
-
-        function generatePadding(lines) {
-            let padding = "###";
-            for (let i = 0; i < lines; i++) {
-                padding += "/* Encrypted Line */\n";
-            }
-            return padding;
-        }
-
-        function renameVariables(code) {
-            var varNames = code.match(/\b[a-zA-Z_]\w*\b/g);
-            var uniqueNames = [...new Set(varNames)];
-            uniqueNames.forEach(function(name, index) {
-                if (!["eval", "atob", "btoa", "decrypt"].includes(name)) {
-                    var newName = `var_${index}`;
-                    var regex = new RegExp(`\\b${name}\\b`, "g");
-                    code = code.replace(regex, newName);
-                }
-            });
-            return code;
-        }
-
-        function copyToClipboard() {
-            var output = document.getElementById("jsOutput");
-            output.select();
-            document.execCommand("copy");
-            alert("Kode telah disalin!");
-        }
-    </script>
-
+    function clearAll() {
+      document.getElementById('input').value = '';
+      document.getElementById('output').value = '';
+    }
+  </script>
 </body>
 </html>
